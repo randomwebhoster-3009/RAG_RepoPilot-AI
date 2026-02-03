@@ -41,3 +41,54 @@ text_splitter = RecursiveCharacterTextSplitter(
     chunk_overlap=100,
     separators=["\nclass ", "\ndef ", "\n\n", "\n", " "]
 )
+
+# 4. Iterate, Chunk, and Upload
+print("Processing files...")
+vectors_to_upsert = []
+
+for root, dirs, files in os.walk(LOCAL_PATH):
+    # Skip .git
+    if '.git' in root:
+        continue
+        
+    for file in files:
+        if any(file.endswith(ext) for ext in ALLOWED_EXTENSIONS):
+            file_path = os.path.join(root, file)
+            relative_path = os.path.relpath(file_path, LOCAL_PATH)
+            
+            try:
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    content = f.read()
+                
+                # Create chunks
+                chunks = text_splitter.split_text(content)
+                
+                for i, chunk in enumerate(chunks):
+                    chunk_id = f"{relative_path}#chunk{i}"
+                    embedding = model.encode(chunk).tolist()
+                    
+                    vectors_to_upsert.append({
+                        "id": chunk_id,
+                        "values": embedding,
+                        "metadata": {
+                            "filename": relative_path,
+                            "text": chunk,
+                            "chunk_index": i,
+                            "page_content":chunk
+                        }
+                    })
+                    
+                    # Batch upload every 100 vectors to avoid memory/API limits
+                    if len(vectors_to_upsert) >= 100:
+                        index.upsert(vectors=vectors_to_upsert)
+                        vectors_to_upsert = []
+                        print(f"Uploaded batch including: {relative_path}")
+                        
+            except Exception as e:
+                print(f"Could not process {file_path}: {e}")
+
+# Upload remaining vectors
+if vectors_to_upsert:
+    index.upsert(vectors=vectors_to_upsert)
+
+print("Indexing complete!")
