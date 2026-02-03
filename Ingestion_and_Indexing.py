@@ -26,3 +26,11 @@ if os.path.exists(LOCAL_PATH):
 else:  
     print(f"Cloning {REPO_URL}...")
     Repo.clone_from(REPO_URL, LOCAL_PATH)
+
+# 2. Initialize Pinecone and Embedding Model
+model = SentenceTransformer('all-MiniLM-L6-v2') # 384 dimensions
+pc = Pinecone(api_key=os.environ.get('PINECONE_API_KEY'))
+index_name = "fastapi-repo-index"
+
+
+index = pc.Index(index_name)
