@@ -34,3 +34,10 @@ index_name = "fastapi-repo-index"
 
 
 index = pc.Index(index_name)
+
+# 3.Chunking 
+text_splitter = RecursiveCharacterTextSplitter(
+    chunk_size=1000,
+    chunk_overlap=100,
+    separators=["\nclass ", "\ndef ", "\n\n", "\n", " "]
+)
