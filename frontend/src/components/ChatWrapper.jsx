@@ -29,11 +29,11 @@ function ChatWrapper({ treeData, isDarkMode }) {
         <AIChat />
       </div>
 
-      {treeData && (
+      {/* {treeData && (
         <div className="chat-wrapper-prompts">
           <PromptChips onSelectPrompt={handlePromptSelect} />
         </div>
-      )}
+      )} */}
     </div>
   );
 }
