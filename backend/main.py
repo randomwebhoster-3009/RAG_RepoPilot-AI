@@ -70,13 +70,13 @@ def home():
 
 # Load Groq API key from .env at startup
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), ".env"))
-GROQ_API_KEY = os.getenv('GROQ_API_KEY')
+GROQ_API_KEY = os.environ.get('GROQ_API_KEY')
 client = None
 if GROQ_API_KEY:
     client = Groq(api_key=GROQ_API_KEY)
 
 # Initialize Pinecone and Model
-pc = Pinecone(api_key=os.getenv('PINECONE_API_KEY'))
+pc = Pinecone(api_key=os.environ.get('PINECONE_API_KEY'))
 index = pc.Index("fastapi-repo-index")
 embedding_model = SentenceTransformer('all-MiniLM-L6-v2') #matches the one used for upload
 
