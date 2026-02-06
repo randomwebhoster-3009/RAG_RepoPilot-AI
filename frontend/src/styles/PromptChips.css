@@ -1,3 +1,5 @@
+/* 
+
 .prompt-chips {
   display: flex;
   flex-direction: column;
@@ -31,8 +33,10 @@
   background-color: #0969da;
   color: #ffffff;
 }
+*/
 
 /* Dark mode */
+/*  
 [data-theme="dark"] .prompt-chips {
   background-color: #2d2d30;
   border-top-color: #3e3e42;
@@ -54,3 +58,5 @@
   background-color: #007acc;
   color: #ffffff;
 }
+
+  */
